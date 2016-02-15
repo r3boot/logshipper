@@ -1,0 +1,30 @@
+---
+# This file contains the configuration for logshipper
+#
+# For now, you will have to use numerical values to configure the input
+# log type:
+#
+# 0:    syslog with rfc3339 timestamps
+# 1:    common log format
+# 
+# The same thing goes for the output logtype:
+#
+# 0:    stdout
+# 1:    redis
+#
+
+inputs:
+  - name: auth.log
+    path: examples/auth.log
+    type: 0
+  - name: access.log
+    path: examples/access.log
+    type: 1
+
+outputs:
+#  - name: stdout
+#    type: 0
+  - name: redis
+    type: 1
+    uri: jessie.dev:6379
+    key: redis-input
