@@ -26,6 +26,5 @@ func SetupRedisClient(uri string, key string) (err error) {
 
 func ShipRedis(event []byte) (err error) {
 	RedisClient.RPush(LogKey, string(event))
-	Log.Debug("Sent event to redis")
 	return
 }

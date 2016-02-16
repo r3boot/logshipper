@@ -14,8 +14,8 @@
 #
 
 inputs:
-  - name: auth-single.log
-    path: examples/auth-single.log
+  - name: auth.log
+    path: examples/auth.log
     type: 0
   - name: access.log
     path: examples/access.log
@@ -25,6 +25,6 @@ outputs:
   - name: redis
     type: 1
     redis:
-      uri: logger.as65342.net:6379
+      uri: localhost:6379
       key: logstash
       type: syslog-input
