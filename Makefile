@@ -1,12 +1,16 @@
 NAME = "logshipper"
 
+GOPATH = "/tmp/_logshipper_gopath"
+
 all: clean $(NAME)
 
 $(NAME):
-	go build -v
+	mkdir ${GOPATH}
+	GOPATH=${GOPATH} go build -v
 
-package:
-	gbp buildpackage --git-pbuilder
+package: clean $(NAME)
+	equivs-build debian/logshipper.equivs
 
 clean:
 	rm -f logshipper
+	rm -rf ${GOPATH}

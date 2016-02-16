@@ -1,6 +1,6 @@
 Section: misc
 Priority: optional
-Homepage: https://gitlab.as65342.net/r3boot/logshipper
+Homepage: https://github.com/r3boot/logshipper
 Standards-Version: 3.9.2
 
 Package: logshipper
