@@ -14,17 +14,17 @@
 #
 
 inputs:
-  - name: auth.log
-    path: examples/auth.log
+  - name: auth-single.log
+    path: examples/auth-single.log
     type: 0
   - name: access.log
     path: examples/access.log
     type: 1
 
 outputs:
-#  - name: stdout
-#    type: 0
   - name: redis
     type: 1
-    uri: jessie.dev:6379
-    key: redis-input
+    redis:
+      uri: logger.as65342.net:6379
+      key: logstash
+      type: syslog-input

@@ -5,20 +5,22 @@ import (
 )
 
 type LogShipper struct {
-	Name    string
-	Type    int
-	Uri     string
-	Key     string
+	Name  string
+	Type  int
+	Redis struct {
+		Uri  string
+		Key  string
+		Type string
+	}
 	Process func([]byte) (err error)
 	Control chan int
 	Done    chan bool
 }
 
-func NewLogShipper(name string, otype int, uri string) (s *LogShipper, err error) {
+func NewLogShipper(name string, otype int) (s *LogShipper, err error) {
 	s = &LogShipper{
 		Name:    name,
 		Type:    otype,
-		Uri:     uri,
 		Control: make(chan int, 1),
 		Done:    make(chan bool, 1),
 	}
@@ -30,6 +32,7 @@ func NewLogShipper(name string, otype int, uri string) (s *LogShipper, err error
 		}
 	case config.T_REDIS:
 		{
+
 			s.Process = ShipRedis
 		}
 	}
@@ -41,7 +44,9 @@ func (ls *LogShipper) Ship(logdata chan []byte) (err error) {
 
 	if ls.Type == config.T_REDIS {
 		Log.Debug("Setting up redis client")
-		if err = SetupRedisClient(ls.Uri, ls.Key); err != nil {
+		uri := ls.Redis.Uri
+		key := ls.Redis.Key
+		if err = SetupRedisClient(uri, key); err != nil {
 			return
 		}
 	}

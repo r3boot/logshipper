@@ -17,6 +17,7 @@ type SyslogEvent struct {
 	EventType string     `json:"event_type"`
 	Path      string     `json:"path"`
 	Host      string     `json:"host"`
+	Type      string     `json:"type"`
 	Syslog    SyslogData `json:"syslog"`
 }
 
@@ -29,5 +30,6 @@ func NewSyslogEvent() (se SyslogEvent) {
 	se = SyslogEvent{}
 	se.EventType = "syslog"
 	se.Host = Config.Hostname
+	se.Type = Config.Outputs[0].Redis.Type
 	return
 }

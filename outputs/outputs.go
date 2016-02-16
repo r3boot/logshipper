@@ -17,7 +17,10 @@ func Setup(l logger.Log, c config.Config) (err error) {
 	Config = c
 
 	for _, output := range Config.Outputs {
-		ls, err = NewLogShipper(output.Name, output.Type, output.Uri)
+		ls, err = NewLogShipper(output.Name, output.Type)
+		ls.Redis.Uri = output.Redis.Uri
+		ls.Redis.Key = output.Redis.Key
+		ls.Redis.Type = output.Redis.Type
 
 		LogShippers = append(LogShippers, ls)
 	}
