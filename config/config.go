@@ -17,14 +17,13 @@ type Config struct {
 		Path string `yaml:"path"`
 		Type int    `yaml:"type"`
 	}
-	Outputs []struct {
-		Name  string `yaml:"name"`
-		Type  int    `yaml:"type"`
-		Redis struct {
-			Uri  string `yaml:"uri"`
-			Key  string `yaml:"key"`
-			Type string `yaml:type"`
-		}
+	Redis struct {
+		Name     string `yaml:"name"`
+		Uri      string `yaml:"uri"`
+		Key      string `yaml:"key"`
+		Type     string `yaml:type"`
+		Password string `yaml:type"`
+		Database int64  `yaml:database"`
 	}
 }
 

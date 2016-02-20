@@ -1,0 +1,9 @@
+[Unit]
+Description=Starts logshipper
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/logshipper -f /etc/logshipper.yml -v
+
+[Install]
+WantedBy=multi-user.target

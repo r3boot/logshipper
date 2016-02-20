@@ -25,6 +25,8 @@ var cfgfile = flag.String("f", D_CFGFILE, "Configuration file to use")
 var Log logger.Log
 var Config config.Config
 
+var Redis *outputs.RedisShipper
+
 func signalHandler(signals chan os.Signal, done chan bool) {
 	for _ = range signals {
 		for _, input := range inputs.MonitoredFiles {
@@ -32,10 +34,10 @@ func signalHandler(signals chan os.Signal, done chan bool) {
 			input.Control <- config.CMD_CLEANUP
 			<-input.Done
 		}
-		for _, output := range outputs.LogShippers {
-			Log.Debug("Sending cleanup signal to handler for " + output.Name)
-			output.Control <- config.CMD_CLEANUP
-			<-output.Done
+		if Redis.Name != "" {
+			Log.Debug("Sending cleanup signal to handler for " + Redis.Name)
+			Redis.Control <- config.CMD_CLEANUP
+			<-Redis.Done
 		}
 		done <- true
 	}
@@ -68,7 +70,13 @@ func init() {
 	if err = outputs.Setup(Log, Config); err != nil {
 		Log.Fatal("Failed to initialize outputs: " + err.Error())
 	}
-	Log.Verbose("Initialized " + strconv.Itoa(len(outputs.LogShippers)) + " outputs")
+	if Config.Redis.Name != "" {
+		Redis, err = outputs.NewRedisShipper()
+		if err != nil {
+			Log.Fatal("Failed to initialize redis: " + err.Error())
+		}
+		Log.Verbose("Initialized redis log shipper")
+	}
 }
 
 func main() {
@@ -82,10 +90,8 @@ func main() {
 	signal.Notify(signals, os.Interrupt, os.Kill)
 	go signalHandler(signals, cleanupDone)
 
-	for _, output := range outputs.LogShippers {
-		go output.Ship(logdata)
-	}
-	Log.Debug("Started log shippers")
+	go Redis.Ship(logdata)
+	Log.Debug("Started redis log shippers")
 
 	for _, input := range inputs.MonitoredFiles {
 		go input.Parse(logdata)

@@ -2,9 +2,11 @@ package inputs
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/r3boot/logshipper/3rdparty/tail"
 	"github.com/r3boot/logshipper/config"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -27,7 +29,7 @@ func NewMonitoredFile(name string, fname string, ftype int) (tf *MonitoredFile, 
 		Name:    name,
 		Path:    fname,
 		Type:    ftype,
-		SinceDB: "/tmp/" + name + ".sincedb",
+		SinceDB: "/var/lib/logshipper/" + name + ".sincedb",
 		Control: make(chan int, 1),
 		Done:    make(chan bool, 1),
 	}
@@ -41,6 +43,15 @@ func NewMonitoredFile(name string, fname string, ftype int) (tf *MonitoredFile, 
 		{
 			tf.Process = CLFParseLine
 		}
+	default:
+		{
+			err = errors.New("Unknown input type specified")
+			return
+		}
+	}
+
+	if _, err = os.Stat(filepath.Dir(tf.SinceDB)); err != nil {
+		return
 	}
 
 	if fs, err = os.Stat(tf.SinceDB); err == nil {
@@ -80,6 +91,7 @@ func NewMonitoredFile(name string, fname string, ftype int) (tf *MonitoredFile, 
 func (tf *MonitoredFile) SaveSinceDB() (err error) {
 	var fd *os.File
 	var data []byte
+	var written int
 
 	fd, err = os.OpenFile(tf.SinceDB, (os.O_CREATE | os.O_WRONLY), 0600)
 	if err != nil {
@@ -91,8 +103,15 @@ func (tf *MonitoredFile) SaveSinceDB() (err error) {
 		Log.Warning("marshall(): " + err.Error())
 		return
 	}
-	fd.Write(data)
-	fd.Close()
+	written, err = fd.Write(data)
+	if err != nil {
+		return
+	}
+	if written != len(data) {
+		err = errors.New("Invalid number of bytes written")
+		return
+	}
+
 	return
 }
 
@@ -144,6 +163,9 @@ func (tf *MonitoredFile) Parse(output chan []byte) (err error) {
 				if ts.After(tf.Timestamp) || ts.Equal(tf.Timestamp) {
 					output <- event
 					tf.Timestamp = ts
+					if err = tf.SaveSinceDB(); err != nil {
+						return
+					}
 				} else {
 					Log.Debug("Timestamp " + ts.String() + " is in the past")
 				}

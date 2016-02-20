@@ -4,7 +4,7 @@ Homepage: https://github.com/r3boot/logshipper
 Standards-Version: 3.9.2
 
 Package: logshipper
-Version: 0.1
+Version: 0.1.1
 Maintainer: Lex van Roon <r3boot@r3blog.nl>
 # Pre-Depends: <comma-separated list of packages>
 # Depends: <comma-separated list of packages>
@@ -19,6 +19,7 @@ Multi-Arch: same
 # Extra-Files: <comma-separated list of additional files for the doc directory>
 Files: logshipper /usr/sbin/
  logshipper.yml /etc/
+ initscripts/logshipper.service /lib/systemd/system/
 Description: Go-Lang based log parser and redis shipper
  This is a Go-Lang based lightweight replacement for logstash agents running
  on servers. It will parse various different log formats and ship these in json

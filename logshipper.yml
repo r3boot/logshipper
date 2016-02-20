@@ -21,10 +21,8 @@ inputs:
     path: examples/access.log
     type: 1
 
-outputs:
-  - name: redis
-    type: 1
-    redis:
-      uri: localhost:6379
-      key: logstash
-      type: syslog-input
+redis:
+  name: redis
+  uri: localhost:6379
+  key: logstash
+  type: syslog-input
