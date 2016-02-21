@@ -37,12 +37,12 @@ func signalHandler(signals chan os.Signal, done chan bool) {
 		outputs.Multiplexer.Control <- config.CMD_CLEANUP
 		<-outputs.Multiplexer.Done
 
-		if outputs.Redis.Name != "" {
+		if outputs.Redis != nil {
 			Log.Debug("Sending cleanup signal to " + outputs.Redis.Name)
 			outputs.Redis.Control <- config.CMD_CLEANUP
 			<-outputs.Redis.Done
 		}
-		if outputs.Amqp.Name != "" {
+		if outputs.Amqp != nil {
 			Log.Debug("Sending cleanup signal to " + outputs.Amqp.Name)
 			outputs.Amqp.Control <- config.CMD_CLEANUP
 			<-outputs.Amqp.Done
