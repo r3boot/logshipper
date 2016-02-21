@@ -30,6 +30,6 @@ func NewSyslogEvent() (se SyslogEvent) {
 	se = SyslogEvent{}
 	se.EventType = "syslog"
 	se.Host = Config.Hostname
-	se.Type = Config.Redis.Type
+	se.Type = Config.ELK.Type
 	return
 }

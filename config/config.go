@@ -16,15 +16,26 @@ type Config struct {
 		Name string `yaml:"name"`
 		Path string `yaml:"path"`
 		Type int    `yaml:"type"`
-	}
+	} `yaml:"inputs"`
+	ELK struct {
+		Type string `yaml:"type"`
+	} `yaml:"elk"`
 	Redis struct {
 		Name     string `yaml:"name"`
 		Uri      string `yaml:"uri"`
 		Key      string `yaml:"key"`
-		Type     string `yaml:type"`
-		Password string `yaml:type"`
-		Database int64  `yaml:database"`
-	}
+		Type     string `yaml:"type"`
+		Password string `yaml:"password"`
+		Database int64  `yaml:"database"`
+	} `yaml:"redis"`
+	Amqp struct {
+		Name     string `yaml:"name"`
+		Host     string `yaml:"host"`
+		Port     int    `yaml:"port"`
+		Username string `yaml:"username"`
+		Password string `yaml:"password"`
+		Queue    string `yaml:"queue"`
+	} `yaml:"amqp"`
 }
 
 func Setup(l logger.Log, fname string) (cfg Config, err error) {

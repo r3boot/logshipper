@@ -5,9 +5,6 @@ import (
 	"gopkg.in/redis.v3"
 )
 
-var RedisClient *redis.Client
-var LogKey string
-
 type RedisShipper struct {
 	Name    string
 	Uri     string
@@ -56,7 +53,7 @@ func (rs *RedisShipper) Ship(logdata chan []byte) (err error) {
 			{
 				event_s := string(event)
 				Log.Debug("Sending event to redis: " + event_s)
-				rs.Client.RPush(LogKey, event_s)
+				rs.Client.RPush(rs.Key, event_s)
 			}
 		case cmd := <-rs.Control:
 			{

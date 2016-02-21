@@ -20,6 +20,7 @@ type HttpData struct {
 type HttpEvent struct {
 	Timestamp time.Time `json:"timestamp"`
 	EventType string    `json:"event_type"`
+	Type      string    `json:"type"`
 	Path      string    `json:"path"`
 	Host      string    `json:"host"`
 	SrcIp     string    `json:"src_ip"`
@@ -35,5 +36,6 @@ func NewHttpEvent() (se HttpEvent) {
 	se = HttpEvent{}
 	se.EventType = "http"
 	se.Host = Config.Hostname
+	se.Type = Config.ELK.Type
 	return
 }

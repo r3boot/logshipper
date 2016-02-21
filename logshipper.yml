@@ -21,8 +21,19 @@ inputs:
     path: examples/access.log
     type: 1
 
+elk:
+  type: syslog-input
+
 redis:
   name: redis
   uri: localhost:6379
   key: logstash
   type: syslog-input
+
+amqp:
+  name: amqp
+  host: localhost
+  port: 5672
+  username: logshipper
+  password: logshipper
+  queue: amqp-input
