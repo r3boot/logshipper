@@ -48,7 +48,7 @@ func NewAmqpShipper() (as *AmqpShipper, err error) {
 
 	as.Queue, err = as.Channel.QueueDeclare(
 		Config.Amqp.Queue, // Name of queue
-		false,             // Durable?
+		true,              // Durable?
 		false,             // Delete queue when not used?
 		false,             // Exclusive queue
 		false,             // no-wait
