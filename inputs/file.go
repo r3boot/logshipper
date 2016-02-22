@@ -43,6 +43,10 @@ func NewMonitoredFile(name string, fname string, ftype int) (tf *MonitoredFile, 
 		{
 			tf.Process = CLFParseLine
 		}
+	case config.T_JSON:
+		{
+			tf.Process = JSONParseLine
+		}
 	default:
 		{
 			err = errors.New("Unknown input type specified")

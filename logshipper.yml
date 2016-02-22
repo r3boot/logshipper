@@ -6,12 +6,8 @@
 #
 # 0:    syslog with rfc3339 timestamps
 # 1:    common log format
+# 2:    JSON format
 # 
-# The same thing goes for the output logtype:
-#
-# 0:    stdout
-# 1:    redis
-#
 
 inputs:
   - name: auth.log
@@ -20,6 +16,9 @@ inputs:
   - name: access.log
     path: examples/access.log
     type: 1
+  - name: eve.json
+    path: examples/eve.json
+    type: 2
 
 elk:
   type: syslog-input

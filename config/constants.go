@@ -5,6 +5,7 @@ package config
  */
 const T_SYSLOG int = 0 // Syslog logging with RFC3339 timestamps
 const T_CLF int = 1    // HTTP Common Log Format
+const T_JSON int = 2   // JSON log format
 
 /*
  * Various constants used to configure the output system
