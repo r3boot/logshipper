@@ -20,6 +20,7 @@ Readme: README.Debian
 Files: usr/sbin/logshipper /
  etc/logshipper.yml /
  etc/init.d/logshipper /
+ var/lib/logshipper/.empty /
 Description: Go-Lang based log parser and redis shipper
  This is a Go-Lang based lightweight replacement for logstash agents running
  on servers. It will parse various different log formats and ship these in json

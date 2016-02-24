@@ -30,6 +30,7 @@ jessie-package:
 		${BUILDROOT}/lib/systemd/system/logshipper.service
 	install -v -m 0644 README.md ${BUILDROOT}/README.Debian
 	install -v -m 0644 debian/changelog ${BUILDROOT}/changelog
+	install -v -m 0644 build/.empty ${BUILDROOT}/var/lib/logshipper/.empty
 	(cd ${BUILDROOT}; equivs-build ${SRCDIR}/debian/logshipper-jessie.equivs)
 	install -dv ${JESSIE_PKGS}
 	cp -v ${BUILDROOT}/logshipper_*_amd64.deb ${JESSIE_PKGS}
@@ -51,6 +52,7 @@ wheezy-package:
 		${BUILDROOT}/etc/init.d/logshipper
 	install -v -m 0644 README.md ${BUILDROOT}/README.Debian
 	install -v -m 0644 debian/changelog ${BUILDROOT}/changelog
+	install -v -m 0644 build/.empty ${BUILDROOT}/var/lib/logshipper/.empty
 	(cd ${BUILDROOT}; equivs-build ${SRCDIR}/debian/logshipper-wheezy.equivs)
 	install -dv ${WHEEZY_PKGS}
 	cp -v ${BUILDROOT}/logshipper_*_amd64.deb ${WHEEZY_PKGS}
