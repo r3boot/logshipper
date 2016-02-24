@@ -14,27 +14,27 @@ type MonitoredFile struct {
 	Tail      *tail.Tail
 	Name      string
 	Path      string
-	Type      string
 	SinceDB   string
 	Timestamp time.Time
-	Process   func(string) ([]byte, time.Time, error)
+	TsFormat  string
+	Process   func(string, string) ([]byte, time.Time, error)
 	Control   chan int
 	Done      chan bool
 }
 
-func NewMonitoredFile(name string, fname string, ftype string) (tf *MonitoredFile, err error) {
+func NewMonitoredFile(name string, fname string, ftype string, tsformat string) (tf *MonitoredFile, err error) {
 	var fs os.FileInfo
 
 	tf = &MonitoredFile{
-		Name:    name,
-		Path:    fname,
-		Type:    ftype,
-		SinceDB: "/var/lib/logshipper/" + name + ".sincedb",
-		Control: make(chan int, 1),
-		Done:    make(chan bool, 1),
+		Name:     name,
+		Path:     fname,
+		TsFormat: tsformat,
+		SinceDB:  "/var/lib/logshipper/" + name + ".sincedb",
+		Control:  make(chan int, 1),
+		Done:     make(chan bool, 1),
 	}
 
-	switch tf.Type {
+	switch ftype {
 	case config.T_SYSLOG:
 		{
 			tf.Process = SyslogParseLine
@@ -157,9 +157,11 @@ func (tf *MonitoredFile) Parse(output chan []byte) (err error) {
 				}
 
 				// Process tail output into event
-				event, ts, err = tf.Process(line.Text)
+				event, ts, err = tf.Process(line.Text, tf.TsFormat)
 				if err != nil {
-					Log.Warning(err)
+					Log.Debug(line.Text)
+					Log.Debug(tf.TsFormat)
+					Log.Warning("[" + tf.Name + "]: " + err.Error())
 					continue
 				}
 

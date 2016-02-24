@@ -22,7 +22,7 @@ func SetupCFL() (err error) {
 	return
 }
 
-func CLFParseLine(line string) (e []byte, ts time.Time, err error) {
+func CLFParseLine(line string, tsformat string) (e []byte, ts time.Time, err error) {
 	var all_matches [][]string
 	var match []string
 	var keys []string
@@ -41,7 +41,7 @@ func CLFParseLine(line string) (e []byte, ts time.Time, err error) {
 		r[keys[i]] = v
 	}
 
-	if ts, err = time.Parse("02/Jan/2006:15:04:05 -0700", r["ts"]); err != nil {
+	if ts, err = time.Parse(tsformat, r["ts"]); err != nil {
 		return
 	}
 

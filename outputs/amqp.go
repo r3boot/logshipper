@@ -34,8 +34,6 @@ func NewAmqpShipper() (as *AmqpShipper, err error) {
 		Done:    make(chan bool, 1),
 	}
 
-	Log.Debug(as)
-
 	if as.Connection, err = amqp.Dial(as.Url); err != nil {
 		//as = nil
 		return

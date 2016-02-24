@@ -27,7 +27,12 @@ func Setup(l logger.Log, c config.Config) (err error) {
 	}
 
 	for _, input := range Config.Inputs {
-		mf, err = NewMonitoredFile(input.Name, input.Path, input.Type)
+		mf, err = NewMonitoredFile(
+			input.Name,
+			input.Path,
+			input.Type,
+			input.TsFormat,
+		)
 		if err != nil {
 			return
 		}

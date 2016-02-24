@@ -31,7 +31,7 @@ func SetupSyslog() (err error) {
 	return
 }
 
-func SyslogParseLine(line string) (e []byte, ts time.Time, err error) {
+func SyslogParseLine(line string, tsformat string) (e []byte, ts time.Time, err error) {
 	var all_matches [][]string
 	var match []string
 	var keys []string
@@ -50,7 +50,7 @@ func SyslogParseLine(line string) (e []byte, ts time.Time, err error) {
 		r[keys[i]] = v
 	}
 
-	if ts, err = time.Parse(time.RFC3339, r["ts"]); err != nil {
+	if ts, err = time.Parse(tsformat, r["ts"]); err != nil {
 		return
 	}
 

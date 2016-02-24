@@ -17,3 +17,21 @@ const T_REDIS int = 1  // Write to redis
  * Various constants used to control the input/output threads
  */
 const CMD_CLEANUP int = 0 // Stop whatever you're doing and cleanup
+
+var TIME_FORMATS []string = []string{
+	"ANSIC",
+	"UnixDate",
+	"RubyDate",
+	"RFC822",
+	"RFC822Z",
+	"RFC850",
+	"RFC1123",
+	"RFC1123Z",
+	"RFC3339",
+	"RFC3339Nano",
+	"Kitchen",
+	"Stamp",
+	"StampMilli",
+	"StampMicro",
+	"StampNano",
+}
