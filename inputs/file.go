@@ -17,7 +17,7 @@ type MonitoredFile struct {
 	SinceDB   string
 	Timestamp time.Time
 	TsFormat  string
-	Process   func(string, string) ([]byte, time.Time, error)
+	Process   func(string, string, string) ([]byte, time.Time, error)
 	Control   chan int
 	Done      chan bool
 }
@@ -43,9 +43,9 @@ func NewMonitoredFile(name string, fname string, ftype string, tsformat string) 
 		{
 			tf.Process = CLFParseLine
 		}
-	case config.T_JSON:
+	case config.T_SURICATA:
 		{
-			tf.Process = JSONParseLine
+			tf.Process = SuricataParseLine
 		}
 	default:
 		{
@@ -157,7 +157,7 @@ func (tf *MonitoredFile) Parse(output chan []byte) (err error) {
 				}
 
 				// Process tail output into event
-				event, ts, err = tf.Process(line.Text, tf.TsFormat)
+				event, ts, err = tf.Process(line.Text, tf.Path, tf.TsFormat)
 				if err != nil {
 					Log.Debug(line.Text)
 					Log.Debug(tf.TsFormat)

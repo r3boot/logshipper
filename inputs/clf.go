@@ -22,7 +22,7 @@ func SetupCFL() (err error) {
 	return
 }
 
-func CLFParseLine(line string, tsformat string) (e []byte, ts time.Time, err error) {
+func CLFParseLine(line string, fname string, tsformat string) (e []byte, ts time.Time, err error) {
 	var all_matches [][]string
 	var match []string
 	var keys []string
@@ -47,6 +47,7 @@ func CLFParseLine(line string, tsformat string) (e []byte, ts time.Time, err err
 
 	he := events.NewHttpEvent()
 	he.Timestamp = ts
+	he.Path = fname
 	he.SrcIp = r["src_ip"]
 	he.Http.Ident = r["ident"]
 	he.Http.User = r["user"]

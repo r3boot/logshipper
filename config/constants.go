@@ -3,9 +3,9 @@ package config
 /*
  * Various constants used to configure the input system
  */
-const T_SYSLOG string = "syslog" // Syslog logging with RFC3339 timestamps
-const T_CLF string = "clf"       // HTTP Common Log Format
-const T_JSON string = "json"     // JSON log format
+const T_SYSLOG string = "syslog"     // Syslog logging with RFC3339 timestamps
+const T_CLF string = "clf"           // HTTP Common Log Format
+const T_SURICATA string = "suricata" // JSON log format
 
 /*
  * Various constants used to configure the output system
@@ -35,3 +35,11 @@ var TIME_FORMATS []string = []string{
 	"StampMicro",
 	"StampNano",
 }
+
+/*
+ * Constants used to determine the suricata event type
+ */
+const S_ALERT string = "alert"
+const S_FILEINFO string = "fileinfo"
+const S_HTTP string = "http"
+const S_TLS string = "tls"

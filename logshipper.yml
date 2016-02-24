@@ -20,7 +20,7 @@ inputs:
     ts_format: 02/Jan/2006:15:04:05 -0700
   - name: eve.json
     path: examples/eve.json
-    type: json
+    type: suricata
     ts_format: 2006-01-02T15:04:05.000000
 
 elk:

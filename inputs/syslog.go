@@ -31,7 +31,7 @@ func SetupSyslog() (err error) {
 	return
 }
 
-func SyslogParseLine(line string, tsformat string) (e []byte, ts time.Time, err error) {
+func SyslogParseLine(line string, fname string, tsformat string) (e []byte, ts time.Time, err error) {
 	var all_matches [][]string
 	var match []string
 	var keys []string
@@ -56,6 +56,7 @@ func SyslogParseLine(line string, tsformat string) (e []byte, ts time.Time, err 
 
 	se := events.NewSyslogEvent()
 	se.Timestamp = ts
+	se.Path = fname
 	se.Syslog.Hostname = r["hostname"]
 	se.Syslog.Program = r["program"]
 	se.Syslog.Message = r["message"]

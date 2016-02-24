@@ -197,7 +197,7 @@ func LoadAndCheckConfig(fname string) (cfg Config, err error) {
 			return
 		}
 		valid_input_type := false
-		for _, t := range []string{T_SYSLOG, T_CLF, T_JSON} {
+		for _, t := range []string{T_SYSLOG, T_CLF, T_SURICATA} {
 			if input.Type == t {
 				valid_input_type = true
 				break
