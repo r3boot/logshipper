@@ -16,11 +16,13 @@ const D_VERBOSE bool = false
 const D_DEBUG bool = false
 const D_TIMESTAMP bool = false
 const D_CFGFILE string = "logshipper.yml"
+const D_CONFIGTEST bool = false
 
 var verbose = flag.Bool("v", D_VERBOSE, "Enable verbose output")
 var debug = flag.Bool("D", D_DEBUG, "Enable debugging output")
 var timestamp = flag.Bool("T", D_TIMESTAMP, "Enable timestamps in output")
 var cfgfile = flag.String("f", D_CFGFILE, "Configuration file to use")
+var cfgtest = flag.Bool("t", D_CONFIGTEST, "Test configuration and exit")
 
 var Log logger.Log
 var Config config.Config
@@ -62,8 +64,16 @@ func init() {
 
 	Log.Verbose("Logging initialized")
 
-	if Config, err = config.Setup(Log, *cfgfile); err != nil {
+	if err = config.Setup(Log); err != nil {
 		Log.Fatal("Failed to initialize configuration: " + err.Error())
+	}
+
+	if Config, err = config.LoadAndCheckConfig(*cfgfile); err != nil {
+		Log.Warning("Configuration has errors:")
+		Log.Fatal(err)
+	} else if *cfgtest {
+		Log.Info("Configuration is OK")
+		os.Exit(0)
 	}
 
 	if err = events.Setup(Log, Config); err != nil {

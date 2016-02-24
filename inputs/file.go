@@ -14,7 +14,7 @@ type MonitoredFile struct {
 	Tail      *tail.Tail
 	Name      string
 	Path      string
-	Type      int
+	Type      string
 	SinceDB   string
 	Timestamp time.Time
 	Process   func(string) ([]byte, time.Time, error)
@@ -22,7 +22,7 @@ type MonitoredFile struct {
 	Done      chan bool
 }
 
-func NewMonitoredFile(name string, fname string, ftype int) (tf *MonitoredFile, err error) {
+func NewMonitoredFile(name string, fname string, ftype string) (tf *MonitoredFile, err error) {
 	var fs os.FileInfo
 
 	tf = &MonitoredFile{

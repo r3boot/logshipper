@@ -46,14 +46,18 @@ func NewAmqpShipper() (as *AmqpShipper, err error) {
 		return
 	}
 
-	as.Queue, err = as.Channel.QueueDeclare(
-		Config.Amqp.Queue, // Name of queue
-		true,              // Durable?
-		false,             // Delete queue when not used?
-		false,             // Exclusive queue
-		false,             // no-wait
-		nil,               // Arguments
+	err = as.Channel.ExchangeDeclare(
+		Config.Amqp.Exchange, // Name of exchange
+		"fanout",             // Type of exchange
+		true,                 // Durable
+		false,                // Auto-deleted
+		false,                // Internal queue
+		false,                // no-wait
+		nil,                  // Arguments
 	)
+	if err != nil {
+		return
+	}
 
 	return
 }
@@ -76,10 +80,10 @@ func (as *AmqpShipper) Ship(logdata chan []byte) (err error) {
 				event_s := string(event)
 				Log.Debug("Sending event to AMQP: " + event_s)
 				err = as.Channel.Publish(
-					"",            // exchange to use
-					as.Queue.Name, // key to use for routing
-					false,         // mandatory
-					false,         // immediate
+					Config.Amqp.Exchange, // exchange to use
+					"",                   // key to use for routing
+					false,                // mandatory
+					false,                // immediate
 					amqp.Publishing{
 						ContentType: "application/json",
 						Body:        event,

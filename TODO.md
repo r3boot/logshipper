@@ -6,3 +6,4 @@
 * Add host field to json file if needed
 * Add /var/lib/logshipper to package files
 * Add configtest option
+* Make sure path is specified on all events
