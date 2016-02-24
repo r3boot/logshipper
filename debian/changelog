@@ -1,0 +1,11 @@
+logshipper (0.1.3-0) unstable; urgency=low
+
+  * Bumped version
+
+ -- Lex van Roon <r3boot@r3blog.nl>  Wed, 24 Feb 2016 22:46:30 +0000
+
+logshipper (0.1.2-3) unstable; urgency=low
+
+  * Reworked debian packaging
+
+ -- Lex van Roon <r3boot@r3blog.nl>  Wed, 24 Feb 2016 22:20:34 +0000

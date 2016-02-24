@@ -1,0 +1,44 @@
+#!/bin/bash
+
+LOGFILE='/var/log/logshipper.log'
+PIDFILE='/var/run/logshipper.pid'
+
+NAME='logshipper'
+DAEMON="/usr/sbin/${NAME}"
+DAEMON_ARGS='-f /etc/logshipper.yml -v'
+
+case "${1}" in
+    start)
+        ${DAEMON} ${DAEMON_ARGS} >> ${LOGFILE} 2>&1 &
+        echo $! > ${PIDFILE}
+        ;;
+    stop)
+        if [ -f ${PIDFILE} ]; then
+            kill `cat ${PIDFILE}`
+            rm -f ${PIDFILE}
+        else
+            pkill `basename ${DAEMON}`
+        fi
+        ;;
+    restart)
+        ${0} stop
+        ${0} start
+        ;;
+    status)
+        PID=$(ps ax | grep ${DAEMON} | grep -v grep | awk '{print $1}')
+        echo -n "${NAME} is "
+        if [ ! -z "${PID}" ]; then
+            echo "running with pid ${PID}"
+            exit 0
+        else
+            echo "NOT running"
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Usage: `basename ${0}` <start|stop|restart|status>"
+        exit 1
+        ;;
+esac
+
+exit 0
