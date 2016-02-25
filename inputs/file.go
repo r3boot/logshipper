@@ -47,6 +47,10 @@ func NewMonitoredFile(name string, fname string, ftype string, tsformat string) 
 		{
 			tf.Process = SuricataParseLine
 		}
+	case config.T_EXIM:
+		{
+			tf.Process = EximParseLine
+		}
 	default:
 		{
 			err = errors.New("Unknown input type specified")

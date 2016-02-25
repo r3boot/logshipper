@@ -26,6 +26,10 @@ func Setup(l logger.Log, c config.Config) (err error) {
 		return
 	}
 
+	if err = SetupExim(); err != nil {
+		return
+	}
+
 	for _, input := range Config.Inputs {
 		mf, err = NewMonitoredFile(
 			input.Name,

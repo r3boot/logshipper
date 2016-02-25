@@ -197,7 +197,7 @@ func LoadAndCheckConfig(fname string) (cfg Config, err error) {
 			return
 		}
 		valid_input_type := false
-		for _, t := range []string{T_SYSLOG, T_CLF, T_SURICATA} {
+		for _, t := range []string{T_SYSLOG, T_CLF, T_SURICATA, T_EXIM} {
 			if input.Type == t {
 				valid_input_type = true
 				break
@@ -223,6 +223,10 @@ func LoadAndCheckConfig(fname string) (cfg Config, err error) {
 			case T_SURICATA:
 				{
 					cfg.Inputs[i].TsFormat = TF_SURICATA
+				}
+			case T_EXIM:
+				{
+					cfg.Inputs[i].TsFormat = TF_EXIM
 				}
 			default:
 				{
