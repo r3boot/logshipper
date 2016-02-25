@@ -211,8 +211,21 @@ func LoadAndCheckConfig(fname string) (cfg Config, err error) {
 		// Check if a timestamp format has been specified. If not, define
 		// a default one
 		if input.TsFormat == "" {
-			Log.Warning("No timestamp format set for " + input.Name + ", defaulting to RFC3339")
-			cfg.Inputs[i].TsFormat = time.RFC3339
+			switch input.Type {
+			case T_CLF:
+				{
+					cfg.Inputs[i].TsFormat = TF_CLF
+				}
+			case T_SURICATA:
+				{
+					cfg.Inputs[i].TsFormat = TF_SURICATA
+				}
+			default:
+				{
+					Log.Warning("No timestamp format set for " + input.Name + ", defaulting to RFC3339")
+					cfg.Inputs[i].TsFormat = time.RFC3339
+				}
+			}
 		} else {
 			cfg.Inputs[i].TsFormat = parseTimeFormat(input.TsFormat)
 		}

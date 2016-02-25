@@ -7,7 +7,7 @@
 # * json:   JSON format
 #
 # inputs[].ts_format: Specify the time format (see golang.org/pkg/time),
-#                     defaults to RFC3339
+#                     defaults are available per input type
 # 
 
 inputs:
@@ -17,11 +17,9 @@ inputs:
   - name: access.log
     path: examples/access.log
     type: clf
-    ts_format: 02/Jan/2006:15:04:05 -0700
   - name: eve.json
     path: examples/eve.json
     type: suricata
-    ts_format: 2006-01-02T15:04:05.000000
 
 elk:
   type: syslog-input

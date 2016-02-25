@@ -43,3 +43,9 @@ const S_ALERT string = "alert"
 const S_FILEINFO string = "fileinfo"
 const S_HTTP string = "http"
 const S_TLS string = "tls"
+
+/*
+ * Constants defining different time formats for different logfiles
+ */
+const TF_CLF string = "02/Jan/2006:15:04:05 -0700"
+const TF_SURICATA string = "2006-01-02T15:04:05.000000"
