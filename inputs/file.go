@@ -159,8 +159,7 @@ func (tf *MonitoredFile) Parse(output chan []byte) (err error) {
 				// Process tail output into event
 				event, ts, err = tf.Process(line.Text, tf.Path, tf.TsFormat)
 				if err != nil {
-					Log.Debug(line.Text)
-					Log.Debug(tf.TsFormat)
+					Log.Verbose(line.Text)
 					Log.Warning("[" + tf.Name + "]: " + err.Error())
 					continue
 				}

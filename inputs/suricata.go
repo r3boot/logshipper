@@ -26,9 +26,9 @@ type SuricataAlertEvent struct {
 	Proto     string `json:"proto"`
 	Alert     struct {
 		Action      string `json:"action"`
-		Gid         string `json"gid"`
+		Gid         int    `json"gid"`
 		SignatureId int64  `json:"signature_id"`
-		Rev         string `json:"rev"`
+		Rev         int    `json:"rev"`
 		Signature   string `json:"signature"`
 		Category    string `json:"category"`
 		Severity    int    `json:"severity"`

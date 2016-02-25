@@ -212,6 +212,10 @@ func LoadAndCheckConfig(fname string) (cfg Config, err error) {
 		// a default one
 		if input.TsFormat == "" {
 			switch input.Type {
+			case T_SYSLOG:
+				{
+					cfg.Inputs[i].TsFormat = time.RFC3339Nano
+				}
 			case T_CLF:
 				{
 					cfg.Inputs[i].TsFormat = TF_CLF
@@ -232,6 +236,8 @@ func LoadAndCheckConfig(fname string) (cfg Config, err error) {
 
 		i += 1
 	}
+
+	Log.Debug(cfg)
 
 	return
 }
