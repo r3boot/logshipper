@@ -24,16 +24,16 @@ inputs:
 elk:
   type: syslog-input
 
-redis:
-  name: redis
-  uri: localhost:6379
-  key: logstash
-  type: syslog-input
+#redis:
+#  name: redis
+#  uri: redis.service.local:6379
+#  key: logstash
+#  type: syslog-input
 
 amqp:
   name: amqp
-  host: localhost
+  host: rabbitmq.service.local
   port: 5672
   username: logshipper
   password: logshipper
-  queue: amqp-input
+  exchange: amqp-input

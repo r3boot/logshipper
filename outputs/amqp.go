@@ -1,6 +1,7 @@
 package outputs
 
 import (
+	"errors"
 	"github.com/r3boot/logshipper/config"
 	"github.com/streadway/amqp"
 	"strconv"
@@ -35,12 +36,12 @@ func NewAmqpShipper() (as *AmqpShipper, err error) {
 	}
 
 	if as.Connection, err = amqp.Dial(as.Url); err != nil {
-		//as = nil
+		err = errors.New("[NewAmqpShipper]: amqp.Dial() failed: " + err.Error())
 		return
 	}
 
 	if as.Channel, err = as.Connection.Channel(); err != nil {
-		//as = nil
+		err = errors.New("[NewAmqpShipper]: as.Connection.Channel() failed: " + err.Error())
 		return
 	}
 
@@ -54,6 +55,7 @@ func NewAmqpShipper() (as *AmqpShipper, err error) {
 		nil,                  // Arguments
 	)
 	if err != nil {
+		err = errors.New("[NewAmqpShipper]: as.Channel.ExchangeDeclare() failed: " + err.Error())
 		return
 	}
 
