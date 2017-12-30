@@ -5,9 +5,9 @@ package tail
 import (
 	"bufio"
 	"fmt"
-	"github.com/r3boot/logshipper/3rdparty/tail/ratelimiter"
-	"github.com/r3boot/logshipper/3rdparty/tail/util"
-	"github.com/r3boot/logshipper/3rdparty/tail/watch"
+	"tail/ratelimiter"
+	"tail/util"
+	"tail/watch"
 	"gopkg.in/tomb.v1"
 	"io"
 	"io/ioutil"

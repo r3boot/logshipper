@@ -3,6 +3,8 @@ package events
 import (
 	"encoding/json"
 	"time"
+
+	"github.com/r3boot/logshipper/lib/config"
 )
 
 type SyslogData struct {
@@ -28,8 +30,8 @@ func (se *SyslogEvent) Serialize() (result []byte, err error) {
 
 func NewSyslogEvent() (se SyslogEvent) {
 	se = SyslogEvent{}
-	se.EventType = "syslog"
-	se.Host = Config.Hostname
-	se.Type = Config.ELK.Type
+	se.EventType = config.T_SYSLOG
+	se.Host = cfg.Hostname
+	se.Type = cfg.ELK.Type
 	return
 }

@@ -8,38 +8,31 @@ import (
 	"time"
 )
 
-// 2016-02-25 20:08:55 1aZ1HS-0006iF-Rk <= m-2vlkybcnxljidjw6iay5827f5opbillgehggdelein1h7sxg15@bounce.linkedin.com H=mail01.pyzuka.nl [2a01:7c8:c037:6::4]:47889 I=[2001:7b8:3:47:213:154:229:26]:25 P=esmtps X=TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128 CV=no S=39472 id=1087531239.521310.1456427301019.JavaMail.app@ltx1-app7953.prod.linkedin.com
-const RE_EXIM_1 int = 0
-const re_exim_1 string = "^(?P<date>[0-9-]+)\\ (?P<time>[0-9:]+)\\ (?P<lid>[0-9a-zA-Z-]+)\\ <=\\ (?P<from>[a-zA-Z0-9-_+.@]+)\\ H=(?P<srchost>[a-zA-Z0-9._-]+)\\ \\[(?P<srcip>[0-9a-f.:]+)\\]:(?P<srcport>[0-9]+)\\ I=\\[(?P<dstip>[0-9a-f.:]+)\\]:(?P<dstport>[0-9]+)\\ P=(?P<proto>[a-zA-Z0-9]+)\\ X=(?P<tlsproto>[A-Z0-9_.:]+)\\ CV=(?P<tlsverify>[a-z]+)\\ S=(?P<size>[0-9]+)\\ id=(?P<rid>.*)"
+const (
+	// 2016-02-25 20:08:55 1aZ1HS-0006iF-Rk <= m-2vlkybcnxljidjw6iay5827f5opbillgehggdelein1h7sxg15@bounce.linkedin.com H=mail01.pyzuka.nl [2a01:7c8:c037:6::4]:47889 I=[2001:7b8:3:47:213:154:229:26]:25 P=esmtps X=TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128 CV=no S=39472 id=1087531239.521310.1456427301019.JavaMail.app@ltx1-app7953.prod.linkedin.com
+	RE_EXIM_1 = 0
+	re_exim_1 = "^(?P<date>[0-9-]+)\\ (?P<time>[0-9:]+)\\ (?P<lid>[0-9a-zA-Z-]+)\\ <=\\ (?P<from>[a-zA-Z0-9-_+.@]+)\\ H=(?P<srchost>[a-zA-Z0-9._-]+)\\ \\[(?P<srcip>[0-9a-f.:]+)\\]:(?P<srcport>[0-9]+)\\ I=\\[(?P<dstip>[0-9a-f.:]+)\\]:(?P<dstport>[0-9]+)\\ P=(?P<proto>[a-zA-Z0-9]+)\\ X=(?P<tlsproto>[A-Z0-9_.:]+)\\ CV=(?P<tlsverify>[a-z]+)\\ S=(?P<size>[0-9]+)\\ id=(?P<rid>.*)"
 
-// 2016-02-25 20:02:24 1aZ1B6-0006g0-ND => r3boot <r3boot@r3blog.nl> R=mailbox T=dovecot S=7727 QT=4s DT=0s
-const RE_EXIM_2 int = 1
-const re_exim_2 string = "^(?P<date>[0-9-]+)\\ (?P<time>[0-9:]+)\\ (?P<lid>[0-9a-zA-Z-]+)\\ =>\\ (?P<to>.*)\\ R=(?P<dest>[a-zA-Z0-9-_]+)\\ T=(?P<transport>[a-zA-Z0-9-_]+)\\ S=(?P<size>[0-9]+)\\ QT=(?P<qt>[0-9]+)s\\ DT=(?P<dt>[0-9]+)s"
+	// 2016-02-25 20:02:24 1aZ1B6-0006g0-ND => r3boot <r3boot@r3blog.nl> R=mailbox T=dovecot S=7727 QT=4s DT=0s
+	RE_EXIM_2 = 1
+	re_exim_2 = "^(?P<date>[0-9-]+)\\ (?P<time>[0-9:]+)\\ (?P<lid>[0-9a-zA-Z-]+)\\ =>\\ (?P<to>.*)\\ R=(?P<dest>[a-zA-Z0-9-_]+)\\ T=(?P<transport>[a-zA-Z0-9-_]+)\\ S=(?P<size>[0-9]+)\\ QT=(?P<qt>[0-9]+)s\\ DT=(?P<dt>[0-9]+)s"
 
-// 2016-02-25 20:02:24 1aZ1B6-0006g0-ND Completed
-const RE_EXIM_3 int = 2
-const re_exim_3 string = "^(?P<date>[0-9-]+)\\ (?P<time>[0-9:]+)\\ (?P<lid>[0-9a-zA-Z-]+)\\ (?P<status>[a-zA-Z]+)$"
+	// 2016-02-25 20:02:24 1aZ1B6-0006g0-ND Completed
+	RE_EXIM_3 = 2
+	re_exim_3 = "^(?P<date>[0-9-]+)\\ (?P<time>[0-9:]+)\\ (?P<lid>[0-9a-zA-Z-]+)\\ (?P<status>[a-zA-Z]+)$"
 
-// 2016-02-25 20:02:21 1aZ1B6-0006g0-ND DKIM: d=gmail.com s=20120113 c=relaxed/relaxed a=rsa-sha256 [verification succeeded]
-const RE_EXIM_4 int = 3
-const re_exim_4 string = "^(?P<date>[0-9-]+)\\ (?P<time>[0-9:]+)\\ (?P<lid>[0-9a-zA-Z-]+)\\ DKIM:\\ d=(?P<domain>[a-zA-Z0-9-.]+)\\ s=(?P<size>[0-9]+)\\ c=(?P<canon>[a-z/]+)\\ a=(?P<algo>[a-z0-9-]+)\\ \\[(?P<status>.*)\\]"
+	// 2016-02-25 20:02:21 1aZ1B6-0006g0-ND DKIM: d=gmail.com s=20120113 c=relaxed/relaxed a=rsa-sha256 [verification succeeded]
+	RE_EXIM_4 = 3
+	re_exim_4 = "^(?P<date>[0-9-]+)\\ (?P<time>[0-9:]+)\\ (?P<lid>[0-9a-zA-Z-]+)\\ DKIM:\\ d=(?P<domain>[a-zA-Z0-9-.]+)\\ s=(?P<size>[0-9]+)\\ c=(?P<canon>[a-z/]+)\\ a=(?P<algo>[a-z0-9-]+)\\ \\[(?P<status>.*)\\]"
 
-// 2016-02-25 20:00:08 1aYGBw-0002FJ-Jt == bridget_meggett@hzhuixin.top R=dnslookup T=remote_smtp defer (-53): retry time not reached for any host
-const RE_EXIM_5 int = 4
-const re_exim_5 string = "^(?P<date>[0-9-]+)\\ (?P<time>[0-9:]+)\\ (?P<lid>[0-9a-zA-Z-]+)\\ ==\\ (?P<to>.*)\\ R=(?P<router>[a-zA-Z0-9]+)\\ T=(?P<transport>[a-zA-Z0-9-_]+)\\ (?P<status>[a-zA-Z0-9]+)\\ \\((?P<errcode>[0-9-]+)\\):\\ (?P<message>.*)"
+	// 2016-02-25 20:00:08 1aYGBw-0002FJ-Jt == bridget_meggett@hzhuixin.top R=dnslookup T=remote_smtp defer (-53): retry time not reached for any host
+	RE_EXIM_5 = 4
+	re_exim_5 = "^(?P<date>[0-9-]+)\\ (?P<time>[0-9:]+)\\ (?P<lid>[0-9a-zA-Z-]+)\\ ==\\ (?P<to>.*)\\ R=(?P<router>[a-zA-Z0-9]+)\\ T=(?P<transport>[a-zA-Z0-9-_]+)\\ (?P<status>[a-zA-Z0-9]+)\\ \\((?P<errcode>[0-9-]+)\\):\\ (?P<message>.*)"
 
-// 2016-02-25 19:53:39 H=ar-ix.net (mail.ar-ix.net) [2a00:1bd0:197:2:1::42]:53981 I=[2001:7b8:3:47:213:154:229:26]:25 X=TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256 CV=no temporarily rejected MAIL <MullinsSonja52353@webmailcourrier.com>: Could not complete sender verify
-const RE_EXIM_6 int = 5
-const re_exim_6 string = "^(?P<date>[0-9-]+)\\ (?P<time>[0-9:]+)\\ H=(?P<host>[.a-zA-Z0-9-_]+)\\ \\((?P<helo>[.a-zA-Z0-9-_]+)\\)\\ \\[(?P<srcip>[0-9a-f.:]+)\\]:(?P<srcport>[0-9]+)\\ I=\\[(?P<dstip>[0-9a-f.:]+)\\]:(?P<dstport>[0-9]+)\\ X=(?P<tlsproto>[A-Z0-9_.:]+)\\ CV=(?P<tlsverify>[a-z]+)\\ (?P<action>[a-zA-Z0-9\\ ]+)\\ \\<(?P<to>.*)\\>:\\ (?P<message>.*)"
-
-// 2016-02-25 18:05:50 1aYzMC-0005qT-C3 -> jelle@elseonline.nl I=[213.154.229.26] R=dnslookup T=remote_smtp S=6565 H=mx.mijnfilter.com [78.31.117.203] X=TLS1.2:RSA_AES_128_CBC_SHA1:128 CV=no DN="OU=GT07116046,OU=See www.rapidssl.com/resources/cps (c)14,OU=Domain Control Validated - RapidSSL(R),CN=*.geenspam.mx" C="250 OK id=1aYzM1-0002il-9p" QT=10s DT=4s
-// 2016-02-25 18:05:50 1aYzMC-0005qT-C3 -> jelle@elseonline.nl I=[213.154.229.26] R=dnslookup T=remote_smtp S=6565 H=mx.mijnfilter.com [78.31.117.203] X=TLS1.2:RSA_AES_128_CBC_SHA1:128 CV=no DN="OU=GT07116046,OU=See www.rapidssl.com/resources/cps (c)14,OU=Domain Control Validated - RapidSSL(R),CN=*.geenspam.mx" C="250 OK id=1aYzM1-0002il-9p" QT=10s DT=4s
-// 2016-02-25 18:05:49 1aYzM2-0005qT-UX => parallax@countermail.com I=[213.154.229.26] R=dnslookup T=remote_smtp S=6565 H=db1.countermail.com [46.253.205.114] X=TLS1.0:RSA_AES_128_CBC_SHA1:128 CV=no DN="C=SE,L=Stockholm,O=Intergrid AB,CN=*.countermail.com" C="250 2.0.0 Ok: queued as BCF0582A00B2" QT=19s DT=3s
-// 2016-02-25 18:05:48 1aYzMC-0005qT-C3 => rhmls@eightdot.eu I=[213.154.229.26] R=dnslookup T=remote_smtp S=6565 H=foxconn.eightdot.eu [213.134.236.96] X=TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128 CV=no DN="C=NL,ST=GLD,L=Zwolle,O=Eightdot.eu,CN=foxconn.eightdot.eu,EMAIL=cert@foxconn.eightdot.eu" C="250 2.0.0 Ok: queued as 18B6943C0A9" QT=8s DT=1s
-// 2016-02-25 18:05:51 1aYzMC-0005qT-C3 => freek__1996@live.nl I=[213.154.229.26] R=dnslookup T=remote_smtp S=6565 H=mx3.hotmail.com [134.170.2.199] X=TLS1.2:ECDHE_RSA_AES_256_CBC_SHA384:256 CV=no DN="CN=*.hotmail.com" C="250  <DUB124-W222DB2E66AE0485D3679DAD5A60@phx.gbl> Queued mail for delivery" QT=11s DT=3s
-// 2016-02-25 18:05:51 1aYzMC-0005qT-C3 => j.burgerding@jbur.nl I=[213.154.229.26] R=dnslookup T=remote_smtp S=6565 H=mail.jbur.nl [195.8.208.50] C="250 Requested mail action okay, completed" QT=11s DT=3s
-// 2016-02-25 20:00:08 Start queue run: pid=25575
-// 2016-02-25 20:00:08 End queue run: pid=25575
+	// 2016-02-25 19:53:39 H=ar-ix.net (mail.ar-ix.net) [2a00:1bd0:197:2:1::42]:53981 I=[2001:7b8:3:47:213:154:229:26]:25 X=TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256 CV=no temporarily rejected MAIL <MullinsSonja52353@webmailcourrier.com>: Could not complete sender verify
+	RE_EXIM_6 = 5
+	re_exim_6 = "^(?P<date>[0-9-]+)\\ (?P<time>[0-9:]+)\\ H=(?P<host>[.a-zA-Z0-9-_]+)\\ \\((?P<helo>[.a-zA-Z0-9-_]+)\\)\\ \\[(?P<srcip>[0-9a-f.:]+)\\]:(?P<srcport>[0-9]+)\\ I=\\[(?P<dstip>[0-9a-f.:]+)\\]:(?P<dstport>[0-9]+)\\ X=(?P<tlsproto>[A-Z0-9_.:]+)\\ CV=(?P<tlsverify>[a-z]+)\\ (?P<action>[a-zA-Z0-9\\ ]+)\\ \\<(?P<to>.*)\\>:\\ (?P<message>.*)"
+)
 
 type EximIncomingMailEvent struct {
 	Timestamp time.Time `json:"timestamp"`
@@ -202,7 +195,7 @@ func EximParseLine(line string, fname string, tsformat string) (e []byte, ts tim
 	r := map[string]string{}
 	for i, v := range match {
 		r[keys[i]] = v
-		// Log.Debug(keys[i] + ": " + v)
+		// log.Debug(keys[i] + ": " + v)
 	}
 
 	if ts, err = time.Parse(tsformat, r["date"]+" "+r["time"]); err != nil {
@@ -229,7 +222,7 @@ func EximParseLine(line string, fname string, tsformat string) (e []byte, ts tim
 
 			event := &EximIncomingMailEvent{
 				Timestamp: ts,
-				Host:      Config.Hostname,
+				Host:      cfg.Hostname,
 				Path:      fname,
 				EventType: "exim",
 				DstIp:     r["dstip"],
@@ -270,7 +263,7 @@ func EximParseLine(line string, fname string, tsformat string) (e []byte, ts tim
 
 			event := EximMailStoreEvent{
 				Timestamp: ts,
-				Host:      Config.Hostname,
+				Host:      cfg.Hostname,
 				Path:      fname,
 				EventType: "exim",
 			}
@@ -289,7 +282,7 @@ func EximParseLine(line string, fname string, tsformat string) (e []byte, ts tim
 		{
 			event := &EximDeliverMailEvent{
 				Timestamp: ts,
-				Host:      Config.Hostname,
+				Host:      cfg.Hostname,
 				Path:      fname,
 				EventType: "exim",
 			}
@@ -307,7 +300,7 @@ func EximParseLine(line string, fname string, tsformat string) (e []byte, ts tim
 
 			event := &EximDKIMEvent{
 				Timestamp: ts,
-				Host:      Config.Hostname,
+				Host:      cfg.Hostname,
 				Path:      fname,
 				EventType: "exim",
 			}
@@ -331,7 +324,7 @@ func EximParseLine(line string, fname string, tsformat string) (e []byte, ts tim
 
 			event := &EximDeliveryErrorEvent{
 				Timestamp: ts,
-				Host:      Config.Hostname,
+				Host:      cfg.Hostname,
 				Path:      fname,
 				EventType: "exim",
 			}
@@ -359,7 +352,7 @@ func EximParseLine(line string, fname string, tsformat string) (e []byte, ts tim
 
 			event := &EximTempRejectEvent{
 				Timestamp: ts,
-				Host:      Config.Hostname,
+				Host:      cfg.Hostname,
 				Path:      fname,
 				EventType: "exim",
 				DstIp:     r["dstip"],

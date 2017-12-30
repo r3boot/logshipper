@@ -2,4 +2,4 @@
 *.swp
 build/*
 examples
-logshipper
+.idea

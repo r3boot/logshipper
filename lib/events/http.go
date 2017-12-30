@@ -3,6 +3,8 @@ package events
 import (
 	"encoding/json"
 	"time"
+
+	"github.com/r3boot/logshipper/lib/config"
 )
 
 type HttpData struct {
@@ -34,8 +36,8 @@ func (se *HttpEvent) Serialize() (result []byte, err error) {
 
 func NewHttpEvent() (se HttpEvent) {
 	se = HttpEvent{}
-	se.EventType = "http"
-	se.Host = Config.Hostname
-	se.Type = Config.ELK.Type
+	se.EventType = config.T_CLF
+	se.Host = cfg.Hostname
+	se.Type = cfg.ELK.Type
 	return
 }

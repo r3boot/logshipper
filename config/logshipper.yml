@@ -11,12 +11,15 @@
 # 
 
 inputs:
-  - name: auth.log
-    path: examples/auth.log
-    type: syslog
-  - name: access.log
-    path: examples/access.log
-    type: clf
+#  - name: suricata
+#    path: /var/log/rkt/suricata/eve.json
+#    type: suricata
+#  - name: auth.log
+#    path: examples/auth.log
+#    type: syslog
+#  - name: access.log
+#    path: examples/access.log
+#    type: clf
   - name: eve.json
     path: examples/eve.json
     type: suricata

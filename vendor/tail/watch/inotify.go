@@ -5,7 +5,7 @@ package watch
 import (
 	"fmt"
 	"github.com/howeyc/fsnotify"
-	"github.com/r3boot/logshipper/3rdparty/tail/util"
+	"tail/util"
 	"gopkg.in/tomb.v1"
 	"os"
 	"path/filepath"

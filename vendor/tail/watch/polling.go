@@ -3,7 +3,7 @@
 package watch
 
 import (
-	"github.com/r3boot/logshipper/3rdparty/tail/util"
+	"tail/util"
 	"gopkg.in/tomb.v1"
 	"os"
 	"time"
