@@ -68,17 +68,10 @@ func NewMonitoredFile(name, fname, ftype, tsformat string) (*MonitoredFile, erro
 	if err == nil {
 		data := make([]byte, fs.Size())
 
-		fd, err := os.Open(tf.SinceDB)
+		data, err := ioutil.ReadFile(tf.SinceDB)
 		if err != nil {
-			return nil, fmt.Errorf("NewMonitoredFile os.Open: %v", err)
+			return nil, fmt.Errorf("NewMonitoredFile ioutil.ReadFile: %v", err)
 		}
-
-		_, err = fd.Read(data)
-		if err != nil {
-			return nil, fmt.Errorf("NewMonitoredFile fd.Read: %v", err)
-		}
-
-		fd.Close()
 
 		ts := time.Time{}
 		if err = json.Unmarshal(data, &ts); err != nil {

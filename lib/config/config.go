@@ -32,9 +32,9 @@ func LoadConfig(fname string) (*Config, error) {
 	}
 
 	// Parse the yaml into a struct
-	cfg := Config{}
+	cfg := &Config{}
 
-	err = yaml.Unmarshal(data, &cfg)
+	err = yaml.Unmarshal(data, cfg)
 	if err != nil {
 		return nil, fmt.Errorf("LoadConfig yaml.Unmarshal: %v", err)
 	}
@@ -42,7 +42,7 @@ func LoadConfig(fname string) (*Config, error) {
 	// Set the hostname
 	cfg.Hostname, _ = os.Hostname()
 
-	return &cfg, nil
+	return cfg, nil
 }
 
 func LoadAndCheckConfig(fname string) (*Config, error) {
@@ -63,29 +63,12 @@ func LoadAndCheckConfig(fname string) (*Config, error) {
 
 	i := 0
 	for _, input := range cfg.Inputs {
-		// We need a name for the input
-		if input.Name == "" {
-			return nil, fmt.Errorf("LoadAndCheckConfig: no name specified for input")
-		}
-
-		// We also need a path towards a file we can monitor
-		if input.Path == "" {
-			err = errors.New("No path specified for " + input.Name)
-			return nil, fmt.Errorf("LoadAndCheckConfig: no path specified for %s", input.Name)
-		}
-
-		// .. and it needs to be readably preferrably, but we can open the
-		// file on a later time.
-		if _, err = os.Stat(input.Path); err != nil {
-			log.Warningf("LoadAndCheckConfig: %s does not exist", input.Path)
-		}
-
 		// Check if the type of parser to use has been defined
 		if input.Type == "" {
 			return nil, fmt.Errorf("LoadAndCheckConfig: no type found for %s", input.Name)
 		}
 		valid_input_type := false
-		for _, t := range []string{T_SYSLOG, T_CLF, T_SURICATA, T_EXIM} {
+		for _, t := range []string{T_SYSLOG, T_CLF, T_SURICATA, T_EXIM, T_AMQPBRIDGE} {
 			if input.Type == t {
 				valid_input_type = true
 				break
@@ -94,6 +77,25 @@ func LoadAndCheckConfig(fname string) (*Config, error) {
 		if !valid_input_type {
 			err = errors.New("Unknown type specified for " + input.Name + ": " + input.Type)
 			return nil, fmt.Errorf("LoadAndCheckConfig: unknown type specified for %s: %s", input.Name, input.Type)
+		}
+
+		// We need a name for the input
+		if input.Name == "" {
+			return nil, fmt.Errorf("LoadAndCheckConfig: no name specified for input")
+		}
+
+		// We also need a path towards a file we can monitor
+		if input.Path == "" && input.Type != T_AMQPBRIDGE {
+			err = errors.New("No path specified for " + input.Name)
+			return nil, fmt.Errorf("LoadAndCheckConfig: no path specified for %s", input.Name)
+		}
+
+		// .. and it needs to be readably preferrably, but we can open the
+		// file on a later time.
+		if input.Type != T_AMQPBRIDGE {
+			if _, err = os.Stat(input.Path); err != nil {
+				log.Warningf("LoadAndCheckConfig: %s does not exist", input.Path)
+			}
 		}
 
 		// Check if a timestamp format has been specified. If not, define
@@ -116,6 +118,10 @@ func LoadAndCheckConfig(fname string) (*Config, error) {
 				{
 					cfg.Inputs[i].TsFormat = TF_EXIM
 				}
+			case T_AMQPBRIDGE:
+				{
+					cfg.Inputs[i].TsFormat = time.RFC3339
+				}
 			default:
 				{
 					log.Warningf("LoadAndCheckConfig: no timestamp format set for " + input.Name + ", defaulting to RFC3339")
@@ -128,8 +134,6 @@ func LoadAndCheckConfig(fname string) (*Config, error) {
 
 		i += 1
 	}
-
-	log.Debugf("Config: %v", cfg)
 
 	return cfg, nil
 }

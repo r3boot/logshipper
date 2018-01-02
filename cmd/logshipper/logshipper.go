@@ -1,4 +1,4 @@
-package logshipper
+package main
 
 import (
 	"flag"
@@ -75,7 +75,12 @@ func init() {
 	if err != nil {
 		Logger.Fatalf("init: %v", err)
 	}
-	Logger.Debugf("init: Initialized %d inputs", len(inputs.MonitoredFiles))
+	if len(inputs.InputAmqp) > 0 {
+		Logger.Debugf("Detected Amqp inputs, switching to bridge mode")
+		Logger.Debugf("init: Initialized %d amqp inputs", len(inputs.InputAmqp))
+	} else {
+		Logger.Debugf("init: Initialized %d inputs", len(inputs.MonitoredFiles))
+	}
 
 	err = outputs.NewOutputs(Logger, Config)
 	if err != nil {
@@ -97,10 +102,17 @@ func main() {
 	go outputs.Multiplexer.Run(logdata)
 	Logger.Debugf("main: Started output multiplexer")
 
-	for _, input := range inputs.MonitoredFiles {
-		go input.Parse(logdata)
+	if len(inputs.InputAmqp) > 0 {
+		for _, input := range inputs.InputAmqp {
+			go input.Parse(logdata)
+		}
+		Logger.Debugf("main: Started Amqp input readers")
+	} else {
+		for _, input := range inputs.MonitoredFiles {
+			go input.Parse(logdata)
+		}
+		Logger.Debugf("main: Started input readers")
 	}
-	Logger.Debugf("main: Started input readers")
 
 	<-cleanupDone
 	Logger.Debugf("main: Program finished")

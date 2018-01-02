@@ -1,9 +1,10 @@
 package inputs
 
 import (
+	"tail"
+
 	"github.com/r3boot/logshipper/lib/config"
 	"github.com/r3boot/logshipper/lib/logger"
-	"tail"
 )
 
 var (
@@ -13,4 +14,5 @@ var (
 	log *logger.Logger
 
 	MonitoredFiles []*MonitoredFile
+	InputAmqp      []*AmqpSlurper
 )

@@ -6,10 +6,11 @@ import "github.com/r3boot/logshipper/lib/logger"
  * Various constants used to configure the input system
  */
 const (
-	T_SYSLOG   = "syslog"   // Syslog logging with RFC3339 timestamps
-	T_CLF      = "clf"      // HTTP Common Log Format
-	T_SURICATA = "suricata" // JSON log format
-	T_EXIM     = "exim"     // Exim4 log format
+	T_SYSLOG     = "syslog"     // Syslog logging with RFC3339 timestamps
+	T_CLF        = "clf"        // HTTP Common Log Format
+	T_SURICATA   = "suricata"   // JSON log format
+	T_EXIM       = "exim"       // Exim4 log format
+	T_AMQPBRIDGE = "amqpbridge" // Bridge from Amqp to Elasticsearch
 
 	/*
 	 * Various constants used to configure the output system
@@ -49,6 +50,10 @@ type Config struct {
 		Type     string `yaml:"type"`
 		TsFormat string `yaml:"ts_format"`
 	} `yaml:"inputs"`
+	Outputs []struct {
+		Name string `yaml:"name"`
+		Type string `yaml:"type"`
+	} `yaml:"outputs"`
 	ELK struct {
 		Type string `yaml:"type"`
 	} `yaml:"elk"`
@@ -68,6 +73,12 @@ type Config struct {
 		Password string `yaml:"password"`
 		Exchange string `yaml:"exchange"`
 	} `yaml:"amqp"`
+	ES struct {
+		Name  string `yaml:"name"`
+		Host  string `yaml:"host"`
+		Port  int    `yaml:"port"`
+		Index string `yaml:"index"`
+	} `yaml:"elasticsearch"`
 }
 
 var TIME_FORMATS = []string{

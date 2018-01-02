@@ -19,23 +19,41 @@ func NewOutputMultiplexer() *OutputMultiplexer {
 }
 
 func (om *OutputMultiplexer) Run(logdata chan []byte) error {
-	var redis_chan chan []byte
-	var amqp_chan chan []byte
+	var redisChan chan []byte
+	var amqpChan chan []byte
+	var esChan chan []byte
+	var stdoutChan chan []byte
 
-	redis_enabled := false
-	if cfg.Redis.Name != "" {
-		redis_chan = make(chan []byte, 1)
-		go Redis.Ship(redis_chan)
-		redis_enabled = true
-		log.Debugf("OutputMultiplexer.Run: Started Redis output shipper")
+	redisEnabled := false
+	if Redis != nil && cfg.Redis.Name != "" {
+		redisChan = make(chan []byte, 1)
+		go Redis.Ship(redisChan)
+		redisEnabled = true
+		log.Debugf("OutputMultiplexer.Run: Started Redis log shipper")
 	}
 
-	amqp_enabled := false
-	if cfg.Amqp.Name != "" {
-		amqp_chan = make(chan []byte, 1)
-		go Amqp.Ship(amqp_chan)
-		amqp_enabled = true
-		log.Debugf("OutputMultiplexer.Run: Started AMQP output shipper")
+	amqpEnabled := false
+	if Amqp != nil && cfg.Amqp.Name != "" {
+		amqpChan = make(chan []byte, 1)
+		go Amqp.Ship(amqpChan)
+		amqpEnabled = true
+		log.Debugf("OutputMultiplexer.Run: Started AMQP log shipper")
+	}
+
+	esEnabled := false
+	if ES != nil && cfg.ES.Name != "" {
+		esChan = make(chan []byte, 1)
+		go ES.Ship(esChan)
+		esEnabled = true
+		log.Debugf("OutputMultiplexer.Run: Started Elasticsearch log shipper")
+	}
+
+	stdoutEnabled := false
+	if Stdout != nil {
+		stdoutChan = make(chan []byte, 1)
+		go Stdout.Ship(stdoutChan)
+		stdoutEnabled = true
+		log.Debugf("OutputMultiplexer.Run: Started Stdout log shipper")
 	}
 
 	stop_loop := false
@@ -47,13 +65,17 @@ func (om *OutputMultiplexer) Run(logdata chan []byte) error {
 		select {
 		case event := <-logdata:
 			{
-				if redis_enabled {
-					log.Debugf("OutputMultiplexer.Run: Multiplexing event to Redis")
-					redis_chan <- event
+				if redisEnabled {
+					redisChan <- event
 				}
-				if amqp_enabled {
-					log.Debugf("OutputMultiplexer.Run: Multiplexing event to AMQP")
-					amqp_chan <- event
+				if amqpEnabled {
+					amqpChan <- event
+				}
+				if esEnabled {
+					esChan <- event
+				}
+				if stdoutEnabled {
+					stdoutChan <- event
 				}
 			}
 		case cmd := <-om.Control:
