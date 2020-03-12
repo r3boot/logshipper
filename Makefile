@@ -1,13 +1,16 @@
-TARGET = "logshipper"
-BUILD_DIR = ./build
+TARGETS     = logshipper
+BUILD_DIR   = ./build
 
-all: ${TARGET}
+all: dependencies $(TARGETS)
 
-${BUILD_DIR}:
-	mkdir -p "${BUILD_DIR}
+$(BUILD_DIR):
+	mkdir -p "$(BUILD_DIR)"
 
-${TARGET}: ${BUILD_DIR}
-	go build -v -o ${BUILD_DIR}/${TARGET} cmd/${TARGET}/${TARGET}.go
+dependencies:
+	go get -v ./...
+
+$(TARGETS): $(BUILD_DIR)
+	go build -v -o $(BUILD_DIR)/$@ cmd/$@/main.go
 
 clean:
-	[[ -d "${BUILD_DIR}" ]] && rm -rf "${BUILD_DIR}" || true
+	[[ -d "$(BUILD_DIR)" ]] && rm -rf "$(BUILD_DIR)" || true

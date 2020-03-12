@@ -14,7 +14,7 @@ amqp:
   host: rabbitmq.service.as65342
   port: 5672
   username: logshipper
-  password: logshipper
+  password:
   exchange: amqp-input
 
 elasticsearch:
